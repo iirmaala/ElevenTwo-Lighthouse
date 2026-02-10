@@ -38,21 +38,34 @@ let siswaPass="siswaeleventwolighthouse";
 
 let isAdmin=false;
 
+// ================= LOGIN =================
+
 function login(){
-let u=username.value.toLowerCase().trim();
-let p=password.value.toLowerCase().trim();
 
+let u=username.value.trim();
+let p=password.value.trim();
+
+// ADMIN
 if(u===adminUser && p===adminPass){
-isAdmin=true;openApp();return;
+isAdmin=true;
+openApp();
+return;
 }
 
+// SISWA
 for(let s of siswa){
-if(s.toLowerCase()===u && p===siswaPass){
-isAdmin=false;openApp();return;
+if(u===s && p===siswaPass){
+isAdmin=false;
+openApp();
+return;
 }
 }
-loginMsg.innerText="Login salah";
+
+loginMsg.innerText="Username atau password salah";
+
 }
+
+// ================= APP =================
 
 function openApp(){
 loginSection.style.display="none";
@@ -60,11 +73,20 @@ appSection.style.display="block";
 initApp();
 }
 
-function logout(){location.reload();}
+function logout(){
+location.reload();
+}
 
 function initApp(){
-renderSiswa();renderAbsensi();renderTugas();renderJadwal();motivasiRandom();grafik();
+renderSiswa();
+renderAbsensi();
+renderTugas();
+renderJadwal();
+motivasiRandom();
+grafik();
 }
+
+// ================= TAB =================
 
 function showTab(id,e){
 document.querySelectorAll(".tabContent").forEach(t=>t.style.display="none");
@@ -73,9 +95,13 @@ document.querySelectorAll(".tabBtn").forEach(b=>b.classList.remove("active"));
 e.classList.add("active");
 }
 
+// ================= SISWA =================
+
 function renderSiswa(){
 daftarSiswa.innerHTML="";
-siswa.forEach(s=>daftarSiswa.innerHTML+=`<li>${s}</li>`);
+siswa.forEach(s=>{
+daftarSiswa.innerHTML+=`<li>${s}</li>`;
+});
 }
 
 function searchSiswa(){
@@ -85,11 +111,15 @@ li.style.display=li.innerText.toLowerCase().includes(q)?"":"none";
 });
 }
 
+// ================= ABSENSI =================
+
 function renderAbsensi(){
 absensiList.innerHTML="";
 let t=new Date().toISOString().slice(0,10);
+
 siswa.forEach(s=>{
 let v=absensi[t]?.[s]||"";
+
 absensiList.innerHTML+=`${s}
 <select ${!isAdmin?"disabled":""} onchange="updateAbsensi('${s}',this.value)">
 <option></option>
@@ -110,10 +140,16 @@ localStorage.setItem("absensi",JSON.stringify(absensi));
 grafik();
 }
 
+// ================= TUGAS =================
+
 function tambahTugas(){
 if(!isAdmin)return alert("Admin saja");
-let n=prompt("Nama tugas");let d=prompt("Deadline");
-if(n&&d){tugas.push({nama:n,deadline:d,done:false});renderTugas();}
+let n=prompt("Nama tugas");
+let d=prompt("Deadline");
+if(n&&d){
+tugas.push({nama:n,deadline:d,done:false});
+renderTugas();
+}
 }
 
 function renderTugas(){
@@ -125,20 +161,33 @@ listTugas.innerHTML+=`${t.nama} (${t.deadline})
 localStorage.setItem("tugas",JSON.stringify(tugas));
 }
 
-function toggleTugas(i){tugas[i].done=!tugas[i].done;renderTugas();}
+function toggleTugas(i){
+tugas[i].done=!tugas[i].done;
+renderTugas();
+}
+
+// ================= JADWAL =================
 
 function renderJadwal(){
 jadwalList.innerHTML="";
 for(let h in jadwalPelajaran){
-jadwalList.innerHTML+=`<div class="jadwalItem"><b>${h}</b><br>
+jadwalList.innerHTML+=`
+<div class="jadwalItem">
+<b>${h}</b><br>
 ${jadwalPelajaran[h].join(", ")}<br>
-Piket: ${jadwalPiket[h].join(", ")}</div>`;
+Piket: ${jadwalPiket[h].join(", ")}
+</div>`;
 }
 }
 
+// ================= MOTIVASI =================
+
 function motivasiRandom(){
-motivasiText.innerText=motivasi[Math.floor(Math.random()*motivasi.length)];
+motivasiText.innerText=
+motivasi[Math.floor(Math.random()*motivasi.length)];
 }
+
+// ================= REKAP =================
 
 function rekapAbsensi(){
 let r="";
@@ -146,21 +195,31 @@ for(let t in absensi){
 r+=t+"\n";
 for(let s in absensi[t])r+=s+" : "+absensi[t][s]+"\n";
 }
-alert(r||"Kosong");
+alert(r||"Belum ada data");
 }
+
+// ================= EXCEL =================
 
 function exportExcel(){
 let csv="Tanggal,Nama,Status\n";
 for(let t in absensi){
-for(let s in absensi[t])csv+=`${t},${s},${absensi[t][s]}\n`;
+for(let s in absensi[t]){
+csv+=`${t},${s},${absensi[t][s]}\n`;
 }
-let b=new Blob([csv]);let a=document.createElement("a");
-a.href=URL.createObjectURL(b);a.download="absensi.csv";a.click();
 }
+let b=new Blob([csv]);
+let a=document.createElement("a");
+a.href=URL.createObjectURL(b);
+a.download="absensi.csv";
+a.click();
+}
+
+// ================= GRAFIK =================
 
 function grafik(){
 let h=0,i=0,s=0,a=0;
 let t=new Date().toISOString().slice(0,10);
+
 if(absensi[t]){
 for(let x in absensi[t]){
 if(absensi[t][x]=="Hadir")h++;
@@ -169,7 +228,8 @@ if(absensi[t][x]=="Sakit")s++;
 if(absensi[t][x]=="Alpha")a++;
 }
 }
-let c=grafik.getContext("2d");
+
+let c=document.getElementById("grafik").getContext("2d");
 c.clearRect(0,0,300,150);
 c.fillText(`H:${h} I:${i} S:${s} A:${a}`,10,15);
 c.fillRect(10,30,h*20,10);
@@ -178,6 +238,8 @@ c.fillRect(10,70,s*20,10);
 c.fillRect(10,90,a*20,10);
 }
 
+// ================= SEARCH =================
+
 function searchOption(){
 let q=searchOption.value.toLowerCase();
 document.querySelectorAll(".tabBtn").forEach(b=>{
@@ -185,4 +247,8 @@ b.style.display=b.innerText.toLowerCase().includes(q)?"":"none";
 });
 }
 
-window.onload=()=>setTimeout(()=>splash.style.display="none",1200);
+// ================= SPLASH =================
+
+window.onload=()=>{
+setTimeout(()=>splash.style.display="none",1200);
+}
