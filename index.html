@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ElevenTwo Lighthouse</title>
+
+<link rel="stylesheet" href="style.css">
+<link rel="manifest" href="manifest.json">
+</head>
+
+<body>
+
+<div id="splash">XI-2 Lighthouse 🌸</div>
+
+<section id="loginSection" class="card">
+<h1>Login ElevenTwo Lighthouse 🌸</h1>
+
+<input id="username" placeholder="Username">
+<input id="password" type="password">
+
+<button onclick="login()">Login</button>
+<p id="loginMsg"></p>
+</section>
+
+<section id="appSection" style="display:none">
+
+<header>
+<h2>XI-2 SMAS Muhammadiyah 1 Pare 🌸</h2>
+<button onclick="logout()">Logout</button>
+</header>
+
+<input id="searchOption" placeholder="Cari menu..." onkeyup="searchOption()">
+
+<nav>
+<button class="tabBtn active" onclick="showTab('siswa',this)">Siswa</button>
+<button class="tabBtn" onclick="showTab('absensi',this)">Absensi</button>
+<button class="tabBtn" onclick="showTab('tugas',this)">Tugas</button>
+<button class="tabBtn" onclick="showTab('jadwal',this)">Jadwal</button>
+<button class="tabBtn" onclick="showTab('motivasi',this)">Motivasi</button>
+</nav>
+
+<div class="tabContent" id="siswa">
+<h3>Daftar Siswa</h3>
+<input id="searchSiswa" placeholder="Cari siswa..." onkeyup="searchSiswa()">
+<ul id="daftarSiswa"></ul>
+</div>
+
+<div class="tabContent" id="absensi" style="display:none">
+<h3>Absensi</h3>
+<button onclick="rekapAbsensi()">Rekap</button>
+<button onclick="exportExcel()">Export Excel</button>
+<div id="absensiList"></div>
+</div>
+
+<div class="tabContent" id="tugas" style="display:none">
+<h3>Tugas</h3>
+<button onclick="tambahTugas()">Tambah</button>
+<ul id="listTugas"></ul>
+</div>
+
+<div class="tabContent" id="jadwal" style="display:none">
+<h3>Jadwal & Piket</h3>
+<div id="jadwalList"></div>
+</div>
+
+<div class="tabContent" id="motivasi" style="display:none">
+<h3>Motivasi</h3>
+<p id="motivasiText"></p>
+<canvas id="grafik" width="300"></canvas>
+<button onclick="motivasiRandom()">Ganti</button>
+</div>
+
+</section>
+
+<script src="script.js"></script>
+</body>
+</html>
