@@ -1,3 +1,5 @@
+alert("SCRIPT JALAN");
+
 let siswa=[
 "Agha Muhammad Azam Ar-Rosyid",
 "Aldiansah Arga Pratama",
