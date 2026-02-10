@@ -1,0 +1,8 @@
+{
+"name":"ElevenTwo Lighthouse",
+"short_name":"XI2",
+"start_url":"index.html",
+"display":"standalone",
+"background_color":"#ffd6e7",
+"theme_color":"#ff4f9a"
+}
